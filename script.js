@@ -37,9 +37,27 @@ function createGameBoard() {
   function getBoard() {
     return gameboard;
   }
-  return { createBoard, getBoard };
+  function placeMarker(row, col, player) {
+    gameboard[row][col].addMarker(player);
+  }
+  function readCellValue(row, col) {
+    return gameboard[row][col].getValue();
+  }
+
+  return { createBoard, getBoard, placeMarker, readCellValue };
 }
 
 const board = createGameBoard();
 board.createBoard();
-console.log(board.getBoard());
+gameboard = board.getBoard();
+console.table(board.getBoard());
+
+board.placeMarker(0, 2, "1");
+// console.log(gameboard[0][2].getValue());
+console.log(board.readCellValue(0, 2));
+
+board.placeMarker(0, 1, "2");
+// console.log(gameboard[0][1].getValue());
+// console.log(gameboard[1][1].getValue());
+console.log(board.readCellValue(0, 1));
+console.log(board.readCellValue(1, 1));
