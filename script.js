@@ -47,17 +47,61 @@ function createGameBoard() {
   return { createBoard, getBoard, placeMarker, readCellValue };
 }
 
-const board = createGameBoard();
-board.createBoard();
-gameboard = board.getBoard();
-console.table(board.getBoard());
+function gameController(playerOne = "player one", playerTwo = "player two") {
+  const board = createGameBoard();
+  board.createBoard();
 
-board.placeMarker(0, 2, "1");
-// console.log(gameboard[0][2].getValue());
-console.log(board.readCellValue(0, 2));
+  const players = [
+    {
+      name: playerOne,
+      marker: "X",
+    },
+    {
+      name: playerTwo,
+      marker: "O",
+    },
+  ];
 
-board.placeMarker(0, 1, "2");
-// console.log(gameboard[0][1].getValue());
-// console.log(gameboard[1][1].getValue());
-console.log(board.readCellValue(0, 1));
-console.log(board.readCellValue(1, 1));
+  let activePlayer = players[0];
+
+  const getActivePlayer = () => activePlayer;
+
+  const switchPlayerTurn = () => {
+    activePlayer = activePlayer === players[0] ? players[1] : players[0];
+  };
+
+  const printNewRound = () => {
+    board.getBoard();
+    console.log(`${getActivePlayer().name}'s turn.`);
+  };
+
+  const playRound = (row, col) => {
+    // create a marker for the current player
+    console.log(
+      `Placing ${
+        getActivePlayer().name
+      }'s marker into row ${row}, column ${col}...`
+    );
+    board.placeMarker(row, col, getActivePlayer().marker);
+    console.log(board.readCellValue(row, col));
+    console.log(row, col);
+
+    switchPlayerTurn();
+    printNewRound();
+  };
+
+  return {
+    getActivePlayer,
+    switchPlayerTurn,
+    printNewRound,
+    playRound,
+  };
+}
+
+const game = gameController();
+
+console.log(game.playRound(0, 2));
+
+console.log(game.playRound(1, 2));
+
+console.log(game.playRound(1, 1));
