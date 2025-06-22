@@ -88,7 +88,7 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
 
       // check rows
       if (row[0] === row[1] && row[1] === row[2] && row[0] !== 0) {
-        console.log(`Row ${i} wins`);
+        return row[0];
       }
 
       // check columns
@@ -97,28 +97,26 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
         boardState[1][i] === boardState[2][i] &&
         boardState[0][i] !== 0
       ) {
-        console.log(`Column ${i} wins`);
+        return boardState[0][i];
       }
     }
 
     // check diag
-    // console.log(`Diag is ${boardState[i][i]}`);
     if (
       boardState[0][0] === boardState[1][1] &&
       boardState[1][1] === boardState[2][2] &&
       boardState[0][0] !== 0
     ) {
-      console.log(`Diagonal wins`);
+      return boardState[0][0];
     }
 
     // check anti diag
-    // console.log(`Anti diag is ${boardState[i][2 - i]}`);
     if (
       boardState[0][2] === boardState[1][1] &&
       boardState[1][1] === boardState[2][0] &&
       boardState[0][2] !== 0
     ) {
-      console.log(`Anti diagonal wins`);
+      return boardState[0][2];
     }
   };
 
@@ -139,7 +137,12 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
       // console.log(typeof board.readCellValue(row, col));
       console.log(row, col);
 
-      checkWinCon();
+      const winner = checkWinCon();
+
+      if (winner) {
+        console.log(`Player ${winner} wins!`);
+      }
+
       switchPlayerTurn();
       printNewRound();
     }
@@ -158,8 +161,7 @@ const game = gameController();
 console.log(game.playRound(0, 0));
 console.log(game.playRound(0, 2));
 console.log(game.playRound(1, 0));
-console.log(game.playRound(1, 1));
-console.log(game.playRound(2, 2));
+console.log(game.playRound(0, 1));
 console.log(game.playRound(2, 0));
 
 // console.log(game.playRound(0, 1));
