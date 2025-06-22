@@ -83,23 +83,42 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
     const boardState = getGameState();
     console.table(boardState);
 
-    let playerOne = ["X", "X", "X"];
-    let playerTwo = ["O", "O", "O"];
-
     for (let i = 0; i < boardState.length; i++) {
+      const row = boardState[i];
+
       // check rows
-      console.log(`Row ${i} is ${boardState[i]}`);
+      if (row[0] === row[1] && row[1] === row[2] && row[0] !== 0) {
+        console.log(`Row ${i} wins`);
+      }
 
       // check columns
-      console.log(
-        `Column ${i} is ${boardState[0][i]}, ${boardState[1][i]}, ${boardState[2][i]}`
-      );
+      if (
+        boardState[0][i] === boardState[1][i] &&
+        boardState[1][i] === boardState[2][i] &&
+        boardState[0][i] !== 0
+      ) {
+        console.log(`Column ${i} wins`);
+      }
+    }
 
-      // check diag
-      console.log(`Diag is ${boardState[i][i]}`);
+    // check diag
+    // console.log(`Diag is ${boardState[i][i]}`);
+    if (
+      boardState[0][0] === boardState[1][1] &&
+      boardState[1][1] === boardState[2][2] &&
+      boardState[0][0] !== 0
+    ) {
+      console.log(`Diagonal wins`);
+    }
 
-      // check anti diag
-      console.log(`Anti diag is ${boardState[i][2 - i]}`);
+    // check anti diag
+    // console.log(`Anti diag is ${boardState[i][2 - i]}`);
+    if (
+      boardState[0][2] === boardState[1][1] &&
+      boardState[1][1] === boardState[2][0] &&
+      boardState[0][2] !== 0
+    ) {
+      console.log(`Anti diagonal wins`);
     }
   };
 
@@ -137,7 +156,16 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
 const game = gameController();
 
 console.log(game.playRound(0, 0));
-console.log(game.playRound(1, 1));
-console.log(game.playRound(0, 1));
-console.log(game.playRound(1, 2));
 console.log(game.playRound(0, 2));
+console.log(game.playRound(1, 0));
+console.log(game.playRound(1, 1));
+console.log(game.playRound(2, 2));
+console.log(game.playRound(2, 0));
+
+// console.log(game.playRound(0, 1));
+// console.log(game.playRound(1, 2));
+// console.log(game.playRound(2, 2));
+// console.log(game.playRound(0, 2));
+// console.log(game.playRound(1, 0));
+// console.log(game.playRound(2, 1));
+// console.log(game.playRound(2, 0));
