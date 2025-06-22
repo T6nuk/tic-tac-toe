@@ -71,23 +71,59 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
   };
 
   const printNewRound = () => {
-    board.getBoard();
+    // console.table(board.getBoard());
     console.log(`${getActivePlayer().name}'s turn.`);
   };
 
-  const playRound = (row, col) => {
-    // create a marker for the current player
-    console.log(
-      `Placing ${
-        getActivePlayer().name
-      }'s marker into row ${row}, column ${col}...`
-    );
-    board.placeMarker(row, col, getActivePlayer().marker);
-    console.log(board.readCellValue(row, col));
-    console.log(row, col);
+  const getGameState = () => {
+    return board.getBoard().map((row) => row.map((cell) => cell.getValue()));
+  };
 
-    switchPlayerTurn();
-    printNewRound();
+  const checkWinCon = () => {
+    const boardState = getGameState();
+    console.table(boardState);
+
+    let playerOne = ["X", "X", "X"];
+    let playerTwo = ["O", "O", "O"];
+
+    for (let i = 0; i < boardState.length; i++) {
+      // check rows
+      console.log(`Row ${i} is ${boardState[i]}`);
+
+      // check columns
+      console.log(
+        `Column ${i} is ${boardState[0][i]}, ${boardState[1][i]}, ${boardState[2][i]}`
+      );
+
+      // check diag
+      console.log(`Diag is ${boardState[i][i]}`);
+
+      // check anti diag
+      console.log(`Anti diag is ${boardState[i][2 - i]}`);
+    }
+  };
+
+  const playRound = (row, col) => {
+    // check if cell marked
+
+    if (board.readCellValue(row, col)) {
+      console.log(`Row ${row} column ${col} is already marked`);
+    } else {
+      // create a marker for the current player
+      console.log(
+        `Placing ${
+          getActivePlayer().name
+        }'s marker into row ${row}, column ${col}...`
+      );
+      board.placeMarker(row, col, getActivePlayer().marker);
+      console.log(board.readCellValue(row, col));
+      // console.log(typeof board.readCellValue(row, col));
+      console.log(row, col);
+
+      checkWinCon();
+      switchPlayerTurn();
+      printNewRound();
+    }
   };
 
   return {
@@ -100,8 +136,8 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
 
 const game = gameController();
 
-console.log(game.playRound(0, 2));
-
-console.log(game.playRound(1, 2));
-
+console.log(game.playRound(0, 0));
 console.log(game.playRound(1, 1));
+console.log(game.playRound(0, 1));
+console.log(game.playRound(1, 2));
+console.log(game.playRound(0, 2));
