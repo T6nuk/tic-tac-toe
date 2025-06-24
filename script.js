@@ -71,12 +71,20 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
   };
 
   const printNewRound = () => {
-    // console.table(board.getBoard());
     console.log(`${getActivePlayer().name}'s turn.`);
   };
 
   const getGameState = () => {
     return board.getBoard().map((row) => row.map((cell) => cell.getValue()));
+  };
+
+  const boardIsFull = () => {
+    for (let row of board.getBoard()) {
+      for (let cell of row) {
+        if (cell.getValue() === 0) return false;
+      }
+    }
+    return true;
   };
 
   const checkWinCon = () => {
@@ -120,54 +128,58 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
     }
   };
 
-  const playRound = (row, col) => {
-    // check if cell marked
+  let gameOver = false;
 
+  const playRound = (row, col) => {
+    // stop input if winner declared
+    if (gameOver) {
+      console.log("Can not place marker, winner declared");
+      return;
+    }
+
+    // check if cell marked
     if (board.readCellValue(row, col)) {
       console.log(`Row ${row} column ${col} is already marked`);
+      return;
+    }
+
+    // create a marker for the current player
+    console.log(
+      `Placing ${
+        getActivePlayer().name
+      }'s marker into row ${row}, column ${col}...`
+    );
+    board.placeMarker(row, col, getActivePlayer().marker);
+    console.log(row, col);
+
+    const winner = checkWinCon();
+    const fullBoard = boardIsFull();
+
+    if (winner) {
+      gameOver = true;
+      console.log(`Player ${winner} wins!`);
+    } else if (fullBoard) {
+      gameOver = true;
+      console.log("Its a tie");
     } else {
-      // create a marker for the current player
-      console.log(
-        `Placing ${
-          getActivePlayer().name
-        }'s marker into row ${row}, column ${col}...`
-      );
-      board.placeMarker(row, col, getActivePlayer().marker);
-      console.log(board.readCellValue(row, col));
-      // console.log(typeof board.readCellValue(row, col));
-      console.log(row, col);
-
-      const winner = checkWinCon();
-
-      if (winner) {
-        console.log(`Player ${winner} wins!`);
-      }
-
       switchPlayerTurn();
       printNewRound();
     }
   };
 
   return {
-    getActivePlayer,
-    switchPlayerTurn,
-    printNewRound,
     playRound,
   };
 }
 
 const game = gameController();
 
+console.log(game.playRound(1, 1));
+console.log(game.playRound(0, 1));
 console.log(game.playRound(0, 0));
 console.log(game.playRound(0, 2));
 console.log(game.playRound(1, 0));
-console.log(game.playRound(0, 1));
 console.log(game.playRound(2, 0));
-
-// console.log(game.playRound(0, 1));
-// console.log(game.playRound(1, 2));
-// console.log(game.playRound(2, 2));
-// console.log(game.playRound(0, 2));
-// console.log(game.playRound(1, 0));
-// console.log(game.playRound(2, 1));
-// console.log(game.playRound(2, 0));
+console.log(game.playRound(2, 1));
+console.log(game.playRound(1, 2));
+console.log(game.playRound(2, 2));
