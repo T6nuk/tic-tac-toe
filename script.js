@@ -29,6 +29,7 @@ function createGameBoard() {
   function createBoard() {
     for (let i = 0; i < rows; i++) {
       gameboard[i] = [];
+
       for (let j = 0; j < columns; j++) {
         gameboard[i].push(Cell());
       }
@@ -150,7 +151,6 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
       }'s marker into row ${row}, column ${col}...`
     );
     board.placeMarker(row, col, getActivePlayer().marker);
-    console.log(row, col);
 
     const winner = checkWinCon();
     const fullBoard = boardIsFull();
@@ -167,19 +167,62 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
     }
   };
 
+  const takeUserAction = () => {
+    const cell = document.getElementsByClassName("cell1");
+    console.log(cell.textContent);
+  };
+  takeUserAction();
+
   return {
     playRound,
+    getActivePlayer,
+    getBoard: () => {
+      return board.getBoard();
+    },
   };
 }
-
 const game = gameController();
 
-console.log(game.playRound(1, 1));
-console.log(game.playRound(0, 1));
-console.log(game.playRound(0, 0));
-console.log(game.playRound(0, 2));
-console.log(game.playRound(1, 0));
-console.log(game.playRound(2, 0));
-console.log(game.playRound(2, 1));
-console.log(game.playRound(1, 2));
-console.log(game.playRound(2, 2));
+const displayController = ((gameInstance) => {
+  const board = gameInstance.getBoard();
+  const gridContainer = document.getElementById("grid-container");
+  const dataContainer = document.getElementById("data-container");
+
+  const renderBoard = () => {
+    renderData();
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board[i].length; j++) {
+        const cell = board[i][j];
+        let gridSquare = document.createElement("div");
+        gridSquare.dataset.row = i;
+        gridSquare.dataset.col = j;
+
+        gridSquare.addEventListener("click", () => {
+          game.playRound(i, j);
+          gridSquare.textContent = cell.getValue();
+          renderData();
+        });
+
+        gridSquare.textContent = cell.getValue();
+        gridContainer.appendChild(gridSquare);
+      }
+    }
+  };
+
+  const renderData = () => {
+    activePlayer = game.getActivePlayer();
+    activePlayerName = activePlayer.name;
+    let playerNameDiv = document.getElementById("player-name");
+    console.log(activePlayerName);
+    playerNameDiv.textContent = `Active player: ${activePlayer.name}`;
+  };
+
+  const resetBoard = () => {
+    let resetButton = document.getElementById("reset-button");
+    resetButton.addEventListener("click", () => {
+      renderBoard();
+    });
+  };
+  resetBoard();
+  renderBoard();
+})(game);
