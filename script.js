@@ -79,6 +79,10 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
     return board.getBoard().map((row) => row.map((cell) => cell.getValue()));
   };
 
+  const resetGameState = () => {
+    console.log(board.getBoard());
+  };
+
   const boardIsFull = () => {
     for (let row of board.getBoard()) {
       for (let cell of row) {
@@ -176,6 +180,7 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
   return {
     playRound,
     getActivePlayer,
+    resetGameState,
     getBoard: () => {
       return board.getBoard();
     },
@@ -220,7 +225,7 @@ const displayController = ((gameInstance) => {
   const resetBoard = () => {
     let resetButton = document.getElementById("reset-button");
     resetButton.addEventListener("click", () => {
-      renderBoard();
+      game.resetGameState();
     });
   };
   resetBoard();
