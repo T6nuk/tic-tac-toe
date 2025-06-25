@@ -16,15 +16,17 @@ body {
 
 #grid-container {
   margin: 10px;
-  height: 30%;
-  width: 40%;
+  height: 40%;
+  width: 50%;
   display: grid;
   grid-template-columns: 3fr 3fr 3fr;
+  grid-template-rows: 3fr 3fr 3fr;
   gap: 10px;
   background-color: rgb(190, 184, 184);
 }
 
 #grid-container > div {
+  margin: 0;
   font-size: 3rem;
   background-color: beige;
   align-content: center;

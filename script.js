@@ -10,7 +10,7 @@ console.log("hello");
 // Create a cell to represent a square
 
 function Cell() {
-  let value = 0;
+  let value = "";
 
   const addMarker = (player) => {
     value = player;
@@ -18,7 +18,11 @@ function Cell() {
 
   const getValue = () => value;
 
-  return { addMarker, getValue };
+  const reset = () => {
+    value = "";
+  };
+
+  return { addMarker, getValue, reset };
 }
 
 function createGameBoard() {
@@ -80,13 +84,19 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
   };
 
   const resetGameState = () => {
-    console.log(board.getBoard());
+    for (let row of board.getBoard()) {
+      for (let cell of row) {
+        cell.reset();
+        gameOver = false;
+        activePlayer = players[0];
+      }
+    }
   };
 
   const boardIsFull = () => {
     for (let row of board.getBoard()) {
       for (let cell of row) {
-        if (cell.getValue() === 0) return false;
+        if (cell.getValue() === "") return false;
       }
     }
     return true;
@@ -100,7 +110,7 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
       const row = boardState[i];
 
       // check rows
-      if (row[0] === row[1] && row[1] === row[2] && row[0] !== 0) {
+      if (row[0] === row[1] && row[1] === row[2] && row[0] !== "") {
         return row[0];
       }
 
@@ -108,7 +118,7 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
       if (
         boardState[0][i] === boardState[1][i] &&
         boardState[1][i] === boardState[2][i] &&
-        boardState[0][i] !== 0
+        boardState[0][i] !== ""
       ) {
         return boardState[0][i];
       }
@@ -118,7 +128,7 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
     if (
       boardState[0][0] === boardState[1][1] &&
       boardState[1][1] === boardState[2][2] &&
-      boardState[0][0] !== 0
+      boardState[0][0] !== ""
     ) {
       return boardState[0][0];
     }
@@ -127,7 +137,7 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
     if (
       boardState[0][2] === boardState[1][1] &&
       boardState[1][1] === boardState[2][0] &&
-      boardState[0][2] !== 0
+      boardState[0][2] !== ""
     ) {
       return boardState[0][2];
     }
@@ -171,12 +181,6 @@ function gameController(playerOne = "player one", playerTwo = "player two") {
     }
   };
 
-  const takeUserAction = () => {
-    const cell = document.getElementsByClassName("cell1");
-    console.log(cell.textContent);
-  };
-  takeUserAction();
-
   return {
     playRound,
     getActivePlayer,
@@ -191,10 +195,10 @@ const game = gameController();
 const displayController = ((gameInstance) => {
   const board = gameInstance.getBoard();
   const gridContainer = document.getElementById("grid-container");
-  const dataContainer = document.getElementById("data-container");
 
   const renderBoard = () => {
     renderData();
+    gridContainer.textContent = "";
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board[i].length; j++) {
         const cell = board[i][j];
@@ -226,6 +230,7 @@ const displayController = ((gameInstance) => {
     let resetButton = document.getElementById("reset-button");
     resetButton.addEventListener("click", () => {
       game.resetGameState();
+      renderBoard();
     });
   };
   resetBoard();
